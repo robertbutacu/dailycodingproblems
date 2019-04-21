@@ -19,53 +19,44 @@ Bonus: Can you do this in one pass?
   */
 
 object Problem2 extends App with TimingHelpers {
-  def summedPrepending(numbers: List[Double], k: Double): Boolean = {
+  type Result = (Double, Double)
+
+  def summedPrepending(numbers: List[Double], k: Double): Option[Result] = {
     @tailrec
-    def go(remaining: List[Double], generated: List[Double]): Boolean = {
+    def go(remaining: List[Double], generated: List[Double]): Option[Result] = {
       remaining match {
-        case Nil       => false
+        case Nil       => None
         case h :: tail =>
-          generated.find(p => p - h == 0) match {
-            case None    => go(tail, (k - h) +: generated)
-            case Some(e) =>
-              println(s"Found pair: ${k - e} and $h ")
-              true
-          }
+          if(generated.contains(h)) Option((k - h, h))
+          else                      go(tail, (k - h) +: generated)
       }
     }
 
     go(numbers, List.empty)
   }
 
-  def summedAppending(numbers: List[Double], k: Double): Boolean = {
+  def summedAppending(numbers: List[Double], k: Double): Option[Result] = {
     @tailrec
-    def go(remaining: List[Double], generated: List[Double]): Boolean = {
+    def go(remaining: List[Double], generated: List[Double]): Option[Result] = {
       remaining match {
-        case Nil       => false
+        case Nil       => None
         case h :: tail =>
-          generated.find(p => p - h == 0) match {
-            case None    => go(tail, generated :+ (k - h))
-            case Some(e) =>
-              println(s"Found pair: ${k - e} and $h ")
-              true
-          }
+          if(generated.contains(h)) Option((k - h, h))
+          else                      go(tail, generated :+ (k - h))
       }
     }
 
     go(numbers, List.empty)
   }
 
-  def summedHashed(numbers: List[Double], k: Double): Boolean = {
+  def summedHashed(numbers: List[Double], k: Double): Option[Result] = {
     @tailrec
-    def go(left: List[Double], hashed: HashSet[Double]): Boolean = {
+    def go(left: List[Double], hashed: HashSet[Double]): Option[Result] = {
       left match {
-        case Nil       => false
+        case Nil       => None
         case h :: tail =>
-          if(hashed.contains(h)) {
-            println(s"Found pair: $h and ${k - h}")
-            true
-          }
-          else go(tail, hashed + (k - h))
+          if(hashed.contains(h)) Option((h, k - h))
+          else                   go(tail, hashed + (k - h))
       }
     }
 
@@ -80,5 +71,5 @@ object Problem2 extends App with TimingHelpers {
   val average3 = (0 to 10).map(_ => time(summedAppending(list, value))).sum / 11
 
   println("\n\n\n\n")
-  println(s"***** $average1 vs $average2 vs $average3******")
+  println(s"***** Prepend: $average1 vs Hashed: $average2 vs Append: $average3******")
 }
