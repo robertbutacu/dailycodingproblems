@@ -15,10 +15,29 @@ Bonus: Can you do this in one pass?
 /**
   Simply by changing the implementation from a List-based one to a HashSet based one,
   we can see a performance increase of close to 120 times.
+  Edit: we can see that prepending to the list instead of appending 4x increased performance.
   */
 
 object Problem2 extends App with TimingHelpers {
-  def summed(numbers: List[Double], k: Double): Boolean = {
+  def summedPrepending(numbers: List[Double], k: Double): Boolean = {
+    @tailrec
+    def go(remaining: List[Double], generated: List[Double]): Boolean = {
+      remaining match {
+        case Nil       => false
+        case h :: tail =>
+          generated.find(p => p - h == 0) match {
+            case None    => go(tail, (k - h) +: generated)
+            case Some(e) =>
+              println(s"Found pair: ${k - e} and $h ")
+              true
+          }
+      }
+    }
+
+    go(numbers, List.empty)
+  }
+
+  def summedAppending(numbers: List[Double], k: Double): Boolean = {
     @tailrec
     def go(remaining: List[Double], generated: List[Double]): Boolean = {
       remaining match {
@@ -56,9 +75,10 @@ object Problem2 extends App with TimingHelpers {
   val list = (0 to 10000).map(_ => Math.random()).toList
   val value = Math.abs(Math.random())
 
-  val average2 = (0 to 10).map(_ => time(summedHashed(list, value))).sum /11
-  val average1 = (0 to 10).map(_ => time(summed(list, value))).sum / 11
+  val average2 = (0 to 10).map(_ => time(summedHashed(list, value))).sum / 11
+  val average1 = (0 to 10).map(_ => time(summedPrepending(list, value))).sum / 11
+  val average3 = (0 to 10).map(_ => time(summedAppending(list, value))).sum / 11
 
   println("\n\n\n\n")
-  println(s"***** $average1 vs $average2 ******")
+  println(s"***** $average1 vs $average2 vs $average3******")
 }
