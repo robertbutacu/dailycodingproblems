@@ -1,7 +1,5 @@
 package problems
 
-import scala.annotation.tailrec
-
 /*
 There's a staircase with N steps, and you can climb 1 or 2 steps at a time.
 Given N, write a function that returns the number of unique ways you can climb the staircase.
@@ -33,5 +31,6 @@ object Problem1 extends App {
     go(n, List.empty, List.empty)
   }
 
-  println(staircase(4, List(1,2)))
+  println(staircase(5, List(1,2)))
+  println(staircase(5, List(1,2, 3)))
 }
