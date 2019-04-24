@@ -51,7 +51,7 @@ object Problem2 extends App with TimingHelpers {
 
   def summedHashed(numbers: List[Double], k: Double): Option[Result] = {
     @tailrec
-    def go(left: List[Double], hashed: HashSet[Double]): Option[Result] = {
+    def go(left: List[Double], hashed: Set[Double]): Option[Result] = {
       left match {
         case Nil       => None
         case h :: tail =>
