@@ -17,8 +17,7 @@ object Problem3 extends App {
   The length of input array is a positive integer and will not exceed 10,000
    */
   def findMaxConsecutiveOnes(nums: Array[Int]): Int = {
-    @tailrec
-    def go(left: List[Int], currentCount: Int, maxCount: Int): Int = {
+    @tailrec def go(left: List[Int], currentCount: Int, maxCount: Int): Int = {
       left match {
         case Nil      => Math.max(currentCount, maxCount)
         case h :: tail =>

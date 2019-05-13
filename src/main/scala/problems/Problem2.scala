@@ -22,8 +22,7 @@ object Problem2 extends App with TimingHelpers {
   type Result = (Double, Double)
 
   def summedPrepending(numbers: List[Double], k: Double): Option[Result] = {
-    @tailrec
-    def go(remaining: List[Double], generated: List[Double]): Option[Result] = {
+    @tailrec def go(remaining: List[Double], generated: List[Double]): Option[Result] = {
       remaining match {
         case Nil       => None
         case h :: tail =>
@@ -36,8 +35,7 @@ object Problem2 extends App with TimingHelpers {
   }
 
   def summedAppending(numbers: List[Double], k: Double): Option[Result] = {
-    @tailrec
-    def go(remaining: List[Double], generated: List[Double]): Option[Result] = {
+    @tailrec def go(remaining: List[Double], generated: List[Double]): Option[Result] = {
       remaining match {
         case Nil       => None
         case h :: tail =>
@@ -50,8 +48,7 @@ object Problem2 extends App with TimingHelpers {
   }
 
   def summedHashed(numbers: List[Double], k: Double): Option[Result] = {
-    @tailrec
-    def go(left: List[Double], hashed: Set[Double]): Option[Result] = {
+    @tailrec def go(left: List[Double], hashed: Set[Double]): Option[Result] = {
       left match {
         case Nil       => None
         case h :: tail =>
