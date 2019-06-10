@@ -43,6 +43,18 @@ You should return 45, as it is (3 + 2) * (4 + 5).
     implicit def operationCompute: Compute[Operation] = new Compute[Operation] {
       override def combine[F: Fractional](op: Operation, x: F, y: F): F = op.compute(x, y)
     }
+
+    implicit def stringCompute: Compute[String] = new Compute[String] {
+      override def combine[F: Fractional](op: String, x: F, y: F): F = {
+        op match {
+          case "-" => implicitly[Fractional[F]].minus(x, y)
+          case "+" => implicitly[Fractional[F]].plus(x, y)
+          case "*" => implicitly[Fractional[F]].times(x, y)
+          case "/" => implicitly[Fractional[F]].div(x, y)
+          case _   => throw new IllegalArgumentException("Such a shite implementation")
+        }
+      }
+    }
   }
 
   def evaluate[F: Fractional, X](tree: Tree[F, X])(implicit C: Compute[X]): F = {
@@ -52,12 +64,20 @@ You should return 45, as it is (3 + 2) * (4 + 5).
     }
   }
 
-  val result = evaluate[Double, Operation](
+  val resultInOperation = evaluate(
     Node(
       Node(Leaf(3.0), Addition, Leaf(2.0)),
       Multiplication,
       Node(Leaf(4.0), Addition, Leaf(5.0))): Tree[Double, Operation]
   )
 
-  println(result)
+  val resultInString= evaluate(
+    Node(
+      Node(Leaf(3.0), "+", Leaf(2.0)),
+      "*",
+      Node(Leaf(4.0), "+", Leaf(5.0))): Tree[Double, String]
+  )
+
+  println(resultInOperation)
+  println(resultInString)
 }
