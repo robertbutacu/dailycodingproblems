@@ -4,7 +4,6 @@ middle = init . tail
 
 obtainOuterLayer :: [[a]] -> [a]
 obtainOuterLayer []     = []
-obtainOuterLayer [h]    = h
 obtainOuterLayer matrix = firstRow ++ lastColumn ++ lastRow ++ firstColumn
                            where
                               firstRow    = matrix !! 0
@@ -14,7 +13,7 @@ obtainOuterLayer matrix = firstRow ++ lastColumn ++ lastRow ++ firstColumn
 
 recurseIntoMatrix :: [[a]] -> [[a]]
 recurseIntoMatrix []     = []
-recurseIntoMatrix [h]    = [[]]
+recurseIntoMatrix [h]    = []
 recurseIntoMatrix matrix = map middle submatrix
                            where
                                 submatrix = init $ tail $ matrix
