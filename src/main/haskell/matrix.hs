@@ -14,9 +14,7 @@ obtainOuterLayer matrix = firstRow ++ lastColumn ++ lastRow ++ firstColumn
 recurseIntoMatrix :: [[a]] -> [[a]]
 recurseIntoMatrix []     = []
 recurseIntoMatrix [h]    = []
-recurseIntoMatrix matrix = map middle submatrix
-                           where
-                                submatrix = init $ tail $ matrix
+recurseIntoMatrix matrix = map middle submatrix where submatrix = init $ tail $ matrix
 
 snakeRepresentation :: [[a]] -> [a]
 snakeRepresentation []     = []
