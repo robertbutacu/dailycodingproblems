@@ -22,18 +22,18 @@ You should return 45, as it is (3 + 2) * (4 + 5).
   sealed trait Operation extends Product with Serializable {
     def compute[F](x: F, y: F)(implicit F: Fractional[F]): F = {
       this match {
-        case Addition       => F.plus(x, y)
-        case Subtraction    => F.minus(x, y)
-        case Division       => F.div(x, y)
-        case Multiplication => F.times(x, y)
+        case Plus     => F.plus(x, y)
+        case Minus    => F.minus(x, y)
+        case Divide   => F.div(x, y)
+        case Multiply => F.times(x, y)
       }
     }
   }
 
-  case object Addition       extends Operation
-  case object Subtraction    extends Operation
-  case object Division       extends Operation
-  case object Multiplication extends Operation
+  case object Plus     extends Operation
+  case object Minus    extends Operation
+  case object Divide   extends Operation
+  case object Multiply extends Operation
 
   trait Compute[T] {
     def combine[F: Fractional](op: T, x: F, y: F): F
@@ -42,18 +42,6 @@ You should return 45, as it is (3 + 2) * (4 + 5).
   object Compute {
     implicit def operationCompute: Compute[Operation] = new Compute[Operation] {
       override def combine[F: Fractional](op: Operation, x: F, y: F): F = op.compute(x, y)
-    }
-
-    implicit def stringCompute: Compute[String] = new Compute[String] {
-      override def combine[F: Fractional](op: String, x: F, y: F): F = {
-        op match {
-          case "-" => implicitly[Fractional[F]].minus(x, y)
-          case "+" => implicitly[Fractional[F]].plus(x, y)
-          case "*" => implicitly[Fractional[F]].times(x, y)
-          case "/" => implicitly[Fractional[F]].div(x, y)
-          case _   => throw new IllegalArgumentException("Such a shite implementation")
-        }
-      }
     }
   }
 
@@ -66,16 +54,16 @@ You should return 45, as it is (3 + 2) * (4 + 5).
 
   val resultInOperation = evaluate(
     Node(
-      Node(Leaf(3.0), Addition, Leaf(2.0)),
-      Multiplication,
-      Node(Leaf(4.0), Addition, Leaf(5.0))): Tree[Double, Operation]
+      Node(Leaf(3.0), Plus, Leaf(2.0)),
+      Multiply,
+      Node(Leaf(4.0), Plus, Leaf(5.0))): Tree[Double, Operation]
   )
 
   val resultInString= evaluate(
     Node(
-      Node(Leaf(3.0), "+", Leaf(2.0)),
-      "*",
-      Node(Leaf(4.0), "+", Leaf(5.0))): Tree[Double, String]
+      Node(Leaf(3.0), Plus, Leaf(2.0)),
+      Multiply,
+      Node(Leaf(4.0), Plus, Leaf(5.0))): Tree[Double, Operation]
   )
 
   println(resultInOperation)
